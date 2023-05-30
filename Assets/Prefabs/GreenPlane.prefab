@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5269363505125620292}
   - component: {fileID: 7965792594885397097}
-  - component: {fileID: 9047538808399719320}
   - component: {fileID: 68470858471534418}
+  - component: {fileID: 5133144964082894904}
   m_Layer: 0
   m_Name: GreenPlane
   m_TagString: Untagged
@@ -86,18 +86,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &9047538808399719320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8365346305636519855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53ec8615a6339eb429c108b0fb9a0ee3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!60 &68470858471534418
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -147,3 +135,17 @@ PolygonCollider2D:
       - {x: 0, y: -0.25}
       - {x: 0.5, y: 0}
   m_UseDelaunayMesh: 0
+--- !u!114 &5133144964082894904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8365346305636519855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a49a31b5b11cc4da48fd099c57b28e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileType: 0
+  walkable: 1
