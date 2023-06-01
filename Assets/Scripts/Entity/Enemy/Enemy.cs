@@ -1,84 +1,48 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Movement))]
 public class Enemy : MonoBehaviour
 {
+
+	[SerializeField] private float moveSpeed;
 	[SerializeField] private float moveCooldown;
 
-	private World world;
-	private Movement movement;
+	[Header("Patrol settings")]
+	[SerializeField] private Transform patrolPoint;
+	[SerializeField] private float patrolRadius;
+
 	private CharacterVisual characterVisual;
 	private float moveTimer;
-
-	public enum EntityState
-	{
-		Stay,
-		Move,
-	}
-
-	public EntityState State { get; private set; }
+	private Vector3 targetPosition;
 
 	private void Awake()
 	{
-		State = EntityState.Stay;
 		characterVisual = GetComponentInChildren<CharacterVisual>();
-
-		movement = GetComponent<Movement>();
-		world = FindObjectOfType<World>();
-		if (world == null)
-		{
-			throw new System.Exception($"{gameObject.name} can not find world on scene!");
-		}
-		movement.SetTargetPosition(transform.position);
-
-	}
-
-	private void OnEnable()
-	{
-		movement.OnMovmentEnded += OnMovmentEnded;
-	}
-
-	private void OnDisable()
-	{
-		movement.OnMovmentEnded -= OnMovmentEnded;
 	}
 
 	private void Update()
 	{
-		switch (State)
+		moveTimer -= Time.deltaTime;
+		if (moveTimer <= 0)
 		{
-			case EntityState.Stay:
-				moveTimer -= Time.deltaTime;
-				if (moveTimer <= 0)
-				{
-					Move();
-				}
-				break;
-			case EntityState.Move:
-				break;
-			default:
-				throw new System.Exception($"Unknown State in {gameObject.name}");
+			Move();
 		}
+	}
+
+	private void FixedUpdate()
+	{
+		MoveIternal();
 	}
 
 	private void Move()
 	{
-		if (State == EntityState.Stay)
-		{
-			State = EntityState.Move;
-
-			Vector3 positionToCheck = world.GetAvailablePosition(transform.position, (x) => x.TileType == TileType.Yellow);
-			if (world.IsPositionAvailable(positionToCheck))
-			{
-				movement.SetTargetPosition(positionToCheck);
-				characterVisual.SetDirection(positionToCheck - transform.position);
-				moveTimer = moveCooldown;
-			}
-		}
+		moveTimer = moveCooldown;
+		targetPosition = patrolPoint.position + new Vector3(Random.Range(0, patrolRadius), Random.Range(0, patrolRadius), 0f);
 	}
 
-	private void OnMovmentEnded()
+	private void MoveIternal()
 	{
-		State = EntityState.Stay;
+		transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+		characterVisual.SetDirection(targetPosition - transform.position);
+
 	}
 }

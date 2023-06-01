@@ -1,73 +1,42 @@
 using UnityEngine;
-using static Enemy;
 
-[RequireComponent(typeof(Movement))]
-
-public class Character : MonoBehaviour, IControlable
+public class Character : MonoBehaviour, IControlable, IDamageable
 {
+	[SerializeField] private float moveSpeed;
 
-	private World world;
 	private CharacterVisual characterVisual;
-	private Movement movement;
-
-	public EntityState State { get; private set; }
+	private Rigidbody2D rb;
+	private Vector3 moveDirection;
 
 	private void Awake()
 	{
-		State = EntityState.Stay;
 		characterVisual = GetComponentInChildren<CharacterVisual>();
-
-		movement = GetComponent<Movement>();
-		world = FindObjectOfType<World>();
-		if (world == null)
-		{
-			throw new System.Exception($"{gameObject.name} can not find world on scene!");
-		}
-		movement.SetTargetPosition(transform.position);
+		rb = GetComponent<Rigidbody2D>();
 	}
 
-	private void OnEnable()
+	private void FixedUpdate()
 	{
-		movement.OnMovmentEnded += OnMovmentEnded;
-	}
-
-	private void OnDisable()
-	{
-		movement.OnMovmentEnded -= OnMovmentEnded;
-	}
-
-	private void Update()
-	{
-		switch (State)
-		{
-			case EntityState.Stay:
-
-				break;
-			case EntityState.Move:
-
-				break;
-			default:
-				throw new System.Exception($"Unknown State in {gameObject.name}");
-		}
+		MoveInternal();
 	}
 
 	public void Move(Vector3 direction)
 	{
-		if (State == EntityState.Stay)
-		{
-			State = EntityState.Move;
-
-			Vector3 positionToCheck = transform.position + direction;
-			if (world.IsPositionAvailable(positionToCheck))
-			{
-				movement.SetTargetPosition(positionToCheck);
-				characterVisual.SetDirection(positionToCheck - transform.position);
-			}
-		}
+		moveDirection = direction;
 	}
 
-	private void OnMovmentEnded()
+	public void ApplyDamage(float damage, IDamager sender)
 	{
-		State = EntityState.Stay;
+		Health Health = GetComponent<Health>();
+		Health.ApplyDamage(damage);
+		StartCoroutine(characterVisual.Flash(Color.red));
+	}
+
+	private void MoveInternal()
+	{
+		Vector3 velocity = moveDirection * moveSpeed;
+		Vector3 worldVelocity = transform.TransformVector(velocity);
+
+		characterVisual.SetDirection(moveDirection);
+		rb.velocity = worldVelocity;
 	}
 }

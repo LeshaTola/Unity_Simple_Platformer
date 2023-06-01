@@ -1,14 +1,17 @@
 using UnityEngine;
 
-public class Tile : MonoBehaviour
+namespace world
 {
-	[SerializeField] private TileType tileType;
-	[SerializeField] private bool walkable;
-
-	public TileType TileType => tileType;
-
-	public bool IsTileAvailable()
+	public class Tile : MonoBehaviour
 	{
-		return walkable;
+		[SerializeField] private TileType tileType;
+		[SerializeField] private bool walkable;
+
+		public TileType TileType => tileType;
+
+		public bool IsTileAvailable()
+		{
+			return walkable;
+		}
 	}
 }

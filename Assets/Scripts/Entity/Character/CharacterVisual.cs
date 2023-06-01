@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CharacterVisual : MonoBehaviour
@@ -72,6 +73,18 @@ public class CharacterVisual : MonoBehaviour
 
 		float stepCount = angle / step;
 		return Mathf.FloorToInt(stepCount);
+	}
+
+	public IEnumerator Flash(Color color)
+	{
+		SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+		for (int i = 0; i < 3; i++)
+		{
+			renderer.color = color;
+			yield return new WaitForSeconds(0.2f);
+			renderer.color = Color.white;
+			yield return new WaitForSeconds(0.2f);
+		}
 	}
 
 }
