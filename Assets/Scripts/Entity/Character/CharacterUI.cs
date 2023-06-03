@@ -4,16 +4,31 @@ using UnityEngine.UI;
 public class CharacterUI : MonoBehaviour
 {
 	[SerializeField] private Slider healthSlider;
-	[SerializeField] private Health characterHealth;
+	[SerializeField] private Spawner spawner;
+
+	private Character character;
+
+	private void Awake()
+	{
+		character = FindAnyObjectByType<Character>();
+	}
 
 	private void OnEnable()
 	{
-		characterHealth.OnValueChanged += OnHealthValueChanged;
+		if (character != null)
+		{
+			character.Health.OnValueChanged += OnHealthValueChanged;
+		}
+		spawner.OnCharacterSpawned += OnCharacterSpawned;
 	}
 
 	private void OnDisable()
 	{
-		characterHealth.OnValueChanged -= OnHealthValueChanged;
+		if (character != null)
+		{
+			character.Health.OnValueChanged -= OnHealthValueChanged;
+		}
+		spawner.OnCharacterSpawned -= OnCharacterSpawned;
 	}
 
 	private void OnHealthValueChanged(float value)
@@ -24,5 +39,12 @@ public class CharacterUI : MonoBehaviour
 	private void UpdateVisual(float value)
 	{
 		healthSlider.value = value;
+	}
+
+	private void OnCharacterSpawned(Character newCharacter)
+	{
+		character = newCharacter;
+		newCharacter.Health.OnValueChanged += OnHealthValueChanged;
+		UpdateVisual(newCharacter.Health.Value);
 	}
 }

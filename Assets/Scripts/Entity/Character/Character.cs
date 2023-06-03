@@ -8,10 +8,13 @@ public class Character : MonoBehaviour, IControlable, IDamageable
 	private Rigidbody2D rb;
 	private Vector3 moveDirection;
 
+	public Health Health { get; private set; }
+
 	private void Awake()
 	{
 		characterVisual = GetComponentInChildren<CharacterVisual>();
 		rb = GetComponent<Rigidbody2D>();
+		Health = GetComponent<Health>();
 	}
 
 	private void FixedUpdate()
@@ -26,7 +29,6 @@ public class Character : MonoBehaviour, IControlable, IDamageable
 
 	public void ApplyDamage(float damage, IDamager sender)
 	{
-		Health Health = GetComponent<Health>();
 		Health.ApplyDamage(damage);
 		StartCoroutine(characterVisual.Flash(Color.red));
 	}

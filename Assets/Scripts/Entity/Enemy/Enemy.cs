@@ -43,6 +43,5 @@ public class Enemy : MonoBehaviour
 	{
 		transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
 		characterVisual.SetDirection(targetPosition - transform.position);
-
 	}
 }
